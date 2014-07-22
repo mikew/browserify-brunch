@@ -1,6 +1,8 @@
 anymatch = require 'anymatch'
 {BrowserifyInstance} = require './browserify-instance'
 {clone} = require './util'
+{AutoReloadServer} = require './auto-reload-server'
+path = require 'path'
 
 DEFAULTS = {
   extensions: """
@@ -34,6 +36,7 @@ module.exports = class BrowserifyBrunch
     @__initConfig()
     @__initExtensions()
     @__initInstances()
+    @__initAutoReload()
 
   __initConfig: ->
     @config = clone @brunchConfig.plugins?.browserify || {}
@@ -60,10 +63,24 @@ module.exports = class BrowserifyBrunch
 
     null
 
+  __initAutoReload: ->
+    return if @production
+
+    @__autoReloadServer = new AutoReloadServer @config
+
+  include: ->
+    return [] if @production
+    [path.join __dirname, '..', 'vendor', 'auto-reload-browserify.js']
+
   compile: (fileContents, filePath, callback) ->
     console.log filePath
-    #if @watching
-      #return callback null, fileContents, filePath
+
+    if @__autoReloadServer? and path.basename(filePath) is 'auto-reload-browserify.js'
+      console.log @__autoReloadServer.port
+      return callback null, fileContents.replace(9812, @__autoReloadServer.port), filePath
+
+    if @watching
+      return callback null, fileContents, filePath
 
     __triggered = false
 
@@ -76,3 +93,6 @@ module.exports = class BrowserifyBrunch
 
     callback(null, fileContents, filePath) if not __triggered
     null
+
+  teardown: ->
+    @__autoReloadServer?.teardown()
