@@ -3,7 +3,9 @@ browserify-brunch
 
 Brunch + Browserify
 
-If this seems a little weird, that's because it is. Brunch already wraps modules in CommonJS / AMD / whatever you like. But being able to use NPM modules in the browser is pretty great too.
+If this seems a little weird, that's because it is. Brunch already wraps
+modules in CommonJS / AMD / whatever you like. But being able to use NPM
+modules in the browser is pretty great too.
 
 Configuration
 -------------
@@ -44,18 +46,21 @@ exports.config =
           matcher: /^app/
 
           # Direct access to the browserify bundler to do anything you need.
-          onWatchifyLoad: (bundler) -> console.log 'onWatchifyLoad'
+          onBrowserifyLoad: (bundler) -> console.log 'onWatchifyLoad'
 
-          # Any files watched by browserify won't be in brunch's regular pipeline.
-          # If you do anything before your javascripts are compiled, now's the time.
+          # Any files watched by browserify won't be in brunch's regular
+          # pipeline. If you do anything before your javascripts are compiled,
+          # now's the time.
           onBeforeBundle: (bundler) -> console.log 'onBeforeBundle'
 
-          # Any files watched by browserify won't be in brunch's regular pipeline.
-          # If you do anything before your javascripts are compiled, now's the time.
+          # Any files watched by browserify won't be in brunch's regular
+          # pipeline. If you do anything after your javascripts are compiled,
+          # now's the time.
           onAfterBundle: (error, bundleContents) -> console.log 'onAfterBundle'
-          
+
           # Any options to pass to `browserify`.
-          # `extensions` will be set to a proper list of `plugins.browserify.extensions`
+          # `extensions` will be set to a proper list of
+          # `plugins.browserify.extensions`
           instanceOptions: {}
 
           # Any options to pass to `browserify.bundle`.

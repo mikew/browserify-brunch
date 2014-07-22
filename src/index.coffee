@@ -15,11 +15,11 @@ DEFAULTS = {
     'app.js':
       entry: 'app/init.js'
       matcher: /^app/
-      onWatchifyLoad: -> console.log 'onWatchifyLoad'
-      onBeforeBundle: -> console.log 'onBeforeBundle'
-      onAfterBundle: -> console.log 'onAfterBundle'
-      instanceOptions: {}
-      bundleOptions: {}
+      onBrowserifyLoad: undefined
+      onBeforeBundle: undefined
+      onAfterBundle: undefined
+      instanceOptions: undefined
+      bundleOptions: undefined
 }
 
 module.exports = class BrowserifyBrunch
@@ -51,25 +51,25 @@ module.exports = class BrowserifyBrunch
     @__instances = {}
     for compiledPath, data of @config.bundles
       data.instanceOptions ?= {}
+      data.bundleOptions ?= {}
       data.main = this
       data.instanceOptions.extensions ?= (".#{ext}" for ext in @extensionList)
       data.compiledPath = compiledPath
 
       instance = new BrowserifyInstance data
       instance.matcher = anymatch.matcher data.matcher
-      data.onWatchifyLoad?.apply instance, [instance.__w]
+      data.onBrowserifyLoad?.apply instance, [instance.__w]
 
       @__instances[compiledPath] = instance
 
     null
 
   __initAutoReload: ->
-    return if @production
-
+    return if not @watching
     @__autoReloadServer = new AutoReloadServer @config
 
   include: ->
-    return [] if @production
+    return [] if not @__autoReloadServer?
     [path.join __dirname, '..', 'vendor', 'auto-reload-browserify.js']
 
   compile: (fileContents, filePath, callback) ->
