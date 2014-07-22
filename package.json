@@ -1,6 +1,6 @@
 {
   "name": "browserify-brunch",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Browserify + Brunch",
   "main": "lib/index.js",
   "repository": {
