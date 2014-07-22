@@ -1,5 +1,5 @@
 anymatch = require 'anymatch'
-{BrowserifyInstance} = require './browserify-instance.coffee'
+{BrowserifyInstance} = require './browserify-instance'
 {clone} = require './util'
 
 DEFAULTS = {

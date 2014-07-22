@@ -1,8 +1,8 @@
 {
   "name": "browserify-brunch",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Browserify + Brunch",
-  "main": "src/index.coffee",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/mikew/browserify-brunch.git"
