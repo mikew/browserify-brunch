@@ -1,0 +1,4 @@
+browserify-brunch
+=================
+
+Brunch + Browserify
