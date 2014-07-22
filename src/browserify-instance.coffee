@@ -9,6 +9,7 @@ class BrowserifyInstance
     __b = if @data.main.watching then watchify else watchify.browserify
 
     @__w = __b "./#{@data.entry}", @data.instanceOptions
+    @data.onBrowserifyLoad?.apply this, [@__w]
 
     if __b is watchify
       @__w.on 'update', @handleUpdate

@@ -58,7 +58,6 @@ module.exports = class BrowserifyBrunch
 
       instance = new BrowserifyInstance data
       instance.matcher = anymatch.matcher data.matcher
-      data.onBrowserifyLoad?.apply instance, [instance.__w]
 
       @__instances[compiledPath] = instance
 
@@ -73,10 +72,7 @@ module.exports = class BrowserifyBrunch
     [path.join __dirname, '..', 'vendor', 'auto-reload-browserify.js']
 
   compile: (fileContents, filePath, callback) ->
-    console.log filePath
-
     if @__autoReloadServer? and path.basename(filePath) is 'auto-reload-browserify.js'
-      console.log @__autoReloadServer.port
       return callback null, fileContents.replace(9812, @__autoReloadServer.port), filePath
 
     if @watching
