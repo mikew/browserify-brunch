@@ -10,6 +10,7 @@ DEFAULTS = {
   coffee ts jsx
   hbs jade
   """
+  transforms: []
 
   bundles:
     'app.js':
@@ -55,6 +56,7 @@ module.exports = class BrowserifyBrunch
       data.main = this
       data.instanceOptions.extensions ?= (".#{ext}" for ext in @extensionList)
       data.compiledPath = compiledPath
+      data.transforms = @config.transforms
 
       instance = new BrowserifyInstance data
       instance.matcher = anymatch.matcher data.matcher
