@@ -59,11 +59,8 @@ exports.config =
           onAfterBundle: (error, bundleContents) -> console.log 'onAfterBundle'
 
           # Any options to pass to `browserify`.
+          # `debug` will be set to `!production` if not already defined.
           # `extensions` will be set to a proper list of
           # `plugins.browserify.extensions`
           instanceOptions: {}
-
-          # Any options to pass to `browserify.bundle`.
-          # `debug` will be set to `!production` if not already defined.
-          bundleOptions: {}
 ```

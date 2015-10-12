@@ -20,7 +20,6 @@ DEFAULTS = {
       onBeforeBundle: undefined
       onAfterBundle: undefined
       instanceOptions: undefined
-      bundleOptions: undefined
 }
 
 module.exports = class BrowserifyBrunch
@@ -52,14 +51,13 @@ module.exports = class BrowserifyBrunch
     @__instances = {}
     for compiledPath, data of @config.bundles
       data.instanceOptions ?= {}
-      data.bundleOptions ?= {}
       data.main = this
       data.instanceOptions.extensions ?= (".#{ext}" for ext in @extensionList)
       data.compiledPath = compiledPath
       data.transforms = @config.transforms
 
       instance = new BrowserifyInstance data
-      instance.matcher = anymatch.matcher data.matcher
+      instance.matcher = anymatch data.matcher
 
       @__instances[compiledPath] = instance
 
