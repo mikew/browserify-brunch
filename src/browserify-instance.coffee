@@ -1,3 +1,4 @@
+browserify = require 'browserify'
 watchify = require 'watchify'
 mkdirp = require 'mkdirp'
 path = require 'path'
@@ -6,16 +7,26 @@ uglify = require 'uglify-js'
 
 class BrowserifyInstance
   constructor: (@data) ->
-    __b = if @data.main.watching then watchify else watchify.browserify
+    options =
+      debug: !@data.main.production
+    for own k,v of watchify.args
+      options[k] = v
+    for own k,v of @data.instanceOptions
+      options[k] = v
+    if @data.bundleOptions
+      # Backward compatibility with old configs
+      for own k,v of @data.bundleOptions
+        options[k] = v
 
-    @__w = __b "./#{@data.entry}", @data.instanceOptions
+    @__w = browserify "./#{@data.entry}", options
+    @__w = watchify(@__w) if @data.main.watching
 
     for transform in @data.transforms
       @__w.transform(transform)
 
     @data.onBrowserifyLoad?.apply this, [@__w]
 
-    if __b is watchify
+    if @data.main.watching
       @__w.on 'update', @handleUpdate
       @handleUpdate()
 
@@ -25,8 +36,7 @@ class BrowserifyInstance
     @running = true
     @data.onBeforeBundle?.apply this, [@__w]
 
-    @data.bundleOptions.debug ?= !@data.main.production
-    @__w.bundle @data.bundleOptions, (error, js) =>
+    @__w.bundle (error, js) =>
       if error or not js?
         if not @data.main.watching
           throw error
@@ -34,6 +44,9 @@ class BrowserifyInstance
         console.error 'Browserify Error', error
         callback? error || true, fileContents, filePath
         return
+
+      # Browserify > 5.0.0 gives us a buffer object, must convert it to string.
+      js = js.toString()
 
       # Since the files run through browserify are not defined in
       # `brunchConfig.files.javascripts`, they are not picked up by the
