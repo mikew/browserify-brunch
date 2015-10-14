@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+rm -rf lib/
+coffee --bare --output lib/ src/
+npm publish
